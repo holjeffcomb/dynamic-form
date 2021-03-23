@@ -5,6 +5,12 @@ const shirtColorSelect = document.getElementById('color');
 const shirtDesignSelect = document.getElementById('design');
 const shirtColors = shirtColorSelect.getElementsByTagName('option');
 const activitiesBox = document.getElementById('activities-box');
+const activities = activitiesBox.getElementsByTagName('input');
+const paymentMethods = document.getElementById('payment').childNodes;
+const creditCardBox = document.getElementById('credit-card');
+const paypalBox = document.getElementById('paypal');
+const bitcoinBox = document.getElementById('bitcoin');
+const paymentOptions = document.getElementById('payment');
 
 function changeShirtColorText() {
     for (let i = 1; i < shirtColors.length; i++) {
@@ -22,8 +28,10 @@ nameField.focus();
 otherJobRole.hidden = true;
 shirtColorSelect.disabled = true;
 changeShirtColorText(); // change shirt color descriptions
+paymentMethods[3].selected = true; // automatically select credit card payment
+paypalBox.hidden = true;
+bitcoinBox.hidden = true;
 
-console.log(activities);
 
 jobRoleSelect.addEventListener('change', () => {
     if (jobRoleSelect.value === 'other') {
@@ -33,9 +41,7 @@ jobRoleSelect.addEventListener('change', () => {
     }
 });
 
-activitiesBox.addEventListener('change', (e) => {
-    console.log(e.target.dataset.cost);
-});
+
 
 shirtDesignSelect.addEventListener('change', () => {
     shirtColorSelect.disabled = false;
@@ -52,5 +58,40 @@ shirtDesignSelect.addEventListener('change', () => {
         for (let i = 4; i <= 6; i++) {
             shirtColors[i].hidden = false;
         }
+    }
+});
+
+activitiesBox.addEventListener('change', (e) => {
+    let price = 0;
+    for (let i = 0; i < activities.length; i++) {
+        if (activities[i].checked) {
+            price += parseInt(activities[i].dataset.cost);
+        }
+    }
+    document.getElementById('activities-cost').innerText = `Total: $${price}`;
+});
+
+paymentOptions.addEventListener('change', (e) => {
+    creditCardBox.hidden = true;
+    paypalBox.hidden = true;
+    bitcoinBox.hidden = true;
+    let selection;
+    for (let i = 0; i < paymentOptions.length; i++) {
+        if (paymentOptions[i].selected === true) {
+            selection = paymentOptions[i].value;
+        }
+    }
+    switch (selection) {
+        case 'credit-card':
+            creditCardBox.hidden = false;
+            break;
+        case 'paypal':
+            paypalBox.hidden = false;
+            break;
+        case 'bitcoin':
+            bitcoinBox.hidden = false;
+            break;
+        default:
+            alert('error');
     }
 });
