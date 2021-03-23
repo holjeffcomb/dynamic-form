@@ -4,10 +4,26 @@ const otherJobRole = document.getElementById('other-job-role');
 const shirtColorSelect = document.getElementById('color');
 const shirtDesignSelect = document.getElementById('design');
 const shirtColors = shirtColorSelect.getElementsByTagName('option');
-const shirtDesignRegEx = /\(.+\)/;
+const activitiesBox = document.getElementById('activities-box');
+
+function changeShirtColorText() {
+    for (let i = 1; i < shirtColors.length; i++) {
+        shirtColors[i].innerText = shirtColors[i].innerText.replace(/\(.+\)/, ''); // use regex to remove text between () parentheses in shirt color description
+    }
+}
+
+function hideAllShirts() {
+    for (let i = 1; i < shirtColors.length; i++) {
+        shirtColors[i].hidden = true;
+    }
+}
 
 nameField.focus();
 otherJobRole.hidden = true;
+shirtColorSelect.disabled = true;
+changeShirtColorText(); // change shirt color descriptions
+
+console.log(activities);
 
 jobRoleSelect.addEventListener('change', () => {
     if (jobRoleSelect.value === 'other') {
@@ -17,8 +33,9 @@ jobRoleSelect.addEventListener('change', () => {
     }
 });
 
-shirtColorSelect.disabled = true;
-changeShirtDesignText(); // change shirt color descriptions
+activitiesBox.addEventListener('change', (e) => {
+    console.log(e.target.dataset.cost);
+});
 
 shirtDesignSelect.addEventListener('change', () => {
     shirtColorSelect.disabled = false;
@@ -37,18 +54,3 @@ shirtDesignSelect.addEventListener('change', () => {
         }
     }
 });
-
-function changeShirtDesignText() {
-    for (let i = 1; i < shirtColors.length; i++) {
-        shirtColors[i].innerText = shirtColors[i].innerText.replace(shirtDesignRegEx, ''); // use regex to remove text between () parentheses in shirt color description
-    }
-}
-
-function hideAllShirts() {
-    for (let i = 1; i < shirtColors.length; i++) {
-        shirtColors[i].hidden = true;
-    }
-}
-
-
-
