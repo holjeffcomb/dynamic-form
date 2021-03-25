@@ -11,6 +11,12 @@ const creditCardBox = document.getElementById('credit-card');
 const paypalBox = document.getElementById('paypal');
 const bitcoinBox = document.getElementById('bitcoin');
 const paymentOptions = document.getElementById('payment');
+const form = document.querySelector('form');
+const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+const ccNumRegEx = /^\d{13,16}$/;
+const zipRegEx = /^\d{5}$/;
+const cvvRegEx = /^\d{3}$/;
+
 
 function changeShirtColorText() {
     for (let i = 1; i < shirtColors.length; i++) {
@@ -24,6 +30,44 @@ function hideAllShirts() {
     }
 }
 
+function validate(e) {
+
+    const userName = document.querySelector('#name').value;
+    const email = document.querySelector('#email').value;
+    const ccNum = document.querySelector('#cc-num').value;
+    const zip = document.querySelector('#zip').value;
+    const cvv = document.querySelector('#cvv').value;
+
+    if (userName === '') {
+        console.log('name incorrect');
+        e.preventDefault();
+    }
+
+    if (!emailRegEx.test(email)) {
+        console.log('email incorrect');
+        e.preventDefault();
+    }
+
+    if (paymentOptions.value === 'credit-card') {
+
+        if (!ccNumRegEx.test(ccNum)) {
+            console.log('cc num incorrect');
+            e.preventDefault();
+        }   
+    
+        if (!zipRegEx.test(zip)) {
+            console.log('zip incorrect');
+            e.preventDefault();
+        }  
+        if (!cvvRegEx.test(cvv)) {
+            console.log('cvv incorrect');
+            e.preventDefault();
+        }  
+
+    }
+
+}
+
 nameField.focus();
 otherJobRole.hidden = true;
 shirtColorSelect.disabled = true;
@@ -31,7 +75,6 @@ changeShirtColorText(); // change shirt color descriptions
 paymentMethods[3].selected = true; // automatically select credit card payment
 paypalBox.hidden = true;
 bitcoinBox.hidden = true;
-
 
 jobRoleSelect.addEventListener('change', () => {
     if (jobRoleSelect.value === 'other') {
@@ -41,18 +84,14 @@ jobRoleSelect.addEventListener('change', () => {
     }
 });
 
-
-
 shirtDesignSelect.addEventListener('change', () => {
     shirtColorSelect.disabled = false;
     shirtColors[0].selected = true;
-
     if (shirtDesignSelect.value === 'js puns') {
         hideAllShirts();
         for (let i = 1; i <= 3; i++) {
             shirtColors[i].hidden = false;
         }
-
     } else if (shirtDesignSelect.value === 'heart js') {
         hideAllShirts();
         for (let i = 4; i <= 6; i++) {
@@ -75,13 +114,8 @@ paymentOptions.addEventListener('change', (e) => {
     creditCardBox.hidden = true;
     paypalBox.hidden = true;
     bitcoinBox.hidden = true;
-    let selection;
-    for (let i = 0; i < paymentOptions.length; i++) {
-        if (paymentOptions[i].selected === true) {
-            selection = paymentOptions[i].value;
-        }
-    }
-    switch (selection) {
+
+    switch (paymentOptions.value) {
         case 'credit-card':
             creditCardBox.hidden = false;
             break;
@@ -92,6 +126,8 @@ paymentOptions.addEventListener('change', (e) => {
             bitcoinBox.hidden = false;
             break;
         default:
-            alert('error');
+            alert('Error. Invalid payment selection.');
     }
 });
+
+form.addEventListener('submit', validate);
