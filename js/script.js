@@ -194,11 +194,11 @@ cvv.addEventListener('keyup', () => {
 
 // Add event listeners to each activity element
 for (let i = 0; i < activities.length; i++) {
-    activities[i].addEventListener('focus', (e) => {
+    activities[i].addEventListener('focus', () => {
         activities[i].parentNode.className = 'focus';
     });
     
-    activities[i].addEventListener('blur', (e) => {
+    activities[i].addEventListener('blur', () => {
         activities[i].parentNode.classList.remove('focus');
     });
 }
