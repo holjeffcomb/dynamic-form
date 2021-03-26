@@ -30,51 +30,81 @@ function hideAllShirts() {
     }
 }
 
-function validate(e) {
+function invalidate(element) {
+    element.parentNode.classList.add('not-valid');
+    element.parentNode.classList.remove('valid');
+    element.parentElement.lastElementChild.style.display = 'block';
+}
 
-    const userName = document.querySelector('#name').value;
-    const email = document.querySelector('#email').value;
-    const ccNum = document.querySelector('#cc-num').value;
-    const zip = document.querySelector('#zip').value;
-    const cvv = document.querySelector('#cvv').value;
+function validate(element) {
+    element.parentNode.classList.remove('not-valid');
+    element.parentNode.classList.add('valid');
+    element.parentElement.lastElementChild.style.display = 'none';
+}
 
-    if (userName === '') {
-        console.log('name incorrect');
+form.addEventListener('submit', (e) => {
+
+    const userName = document.querySelector('#name');
+    const email = document.querySelector('#email');
+    const ccNum = document.querySelector('#cc-num');
+    const zip = document.querySelector('#zip');
+    const cvv = document.querySelector('#cvv');
+
+    if (userName.value === '') {
+        invalidate(userName);
         e.preventDefault();
+    } else {
+        validate(userName);
     }
 
-    if (!emailRegEx.test(email)) {
-        console.log('email incorrect');
+    if (!emailRegEx.test(email.value)) {
+        invalidate(email);
         e.preventDefault();
+    } else {
+        validate(email);
+    }
+
+    if (isActivitiesEmpty()) {
+        invalidate(activitiesBox);
+        e.preventDefault();
+    } else {
+        validate(activitiesBox);
     }
 
     if (paymentOptions.value === 'credit-card') {
 
-        if (!ccNumRegEx.test(ccNum)) {
-            console.log('cc num incorrect');
+        if (!ccNumRegEx.test(ccNum.value)) {
+            invalidate(ccNum);
             e.preventDefault();
-        }   
+        } else {
+            validate(ccNum);
+        }
     
-        if (!zipRegEx.test(zip)) {
-            console.log('zip incorrect');
+        if (!zipRegEx.test(zip.value)) {
+            invalidate(zip);
             e.preventDefault();
-        }  
-        if (!cvvRegEx.test(cvv)) {
-            console.log('cvv incorrect');
+        } else {
+            validate(zip);
+        }
+        if (!cvvRegEx.test(cvv.value)) {
+            invalidate(cvv);
             e.preventDefault();
-        }  
-
+        } else {
+            validate(cvv);
+        }
     }
+});
 
+function isActivitiesEmpty() {
+    let isEmpty = true;
+    for (let i = 0; i < activities.length; i++) {
+        if (activities[i].checked) {
+            isEmpty = false;
+            break;
+        }
+    }
+    return isEmpty;
 }
-
-nameField.focus();
-otherJobRole.hidden = true;
-shirtColorSelect.disabled = true;
-changeShirtColorText(); // change shirt color descriptions
-paymentMethods[3].selected = true; // automatically select credit card payment
-paypalBox.hidden = true;
-bitcoinBox.hidden = true;
 
 jobRoleSelect.addEventListener('change', () => {
     if (jobRoleSelect.value === 'other') {
@@ -130,4 +160,22 @@ paymentOptions.addEventListener('change', (e) => {
     }
 });
 
-form.addEventListener('submit', validate);
+for (let i = 0; i < activities.length; i++) {
+    activities[i].addEventListener('focus', (e) => {
+        activities[i].parentNode.className = 'focus';
+    });
+    
+    activities[i].addEventListener('blur', (e) => {
+        activities[i].parentNode.classList.remove('focus');
+    });
+}
+
+form.addEventListener('submit', checkForm);
+
+nameField.focus();
+otherJobRole.hidden = true;
+shirtColorSelect.disabled = true;
+changeShirtColorText(); // change shirt color descriptions
+paymentMethods[3].selected = true; // automatically select credit card payment
+paypalBox.hidden = true;
+bitcoinBox.hidden = true;
