@@ -156,7 +156,7 @@ activitiesBox.addEventListener('change', (e) => {
                 if (j === i) { // skip current activity
                     continue;
                 }
-                if (activities[i].dataset.dayAndTime === activities[j].dataset.dayAndTime) {
+                if (activities[i].dataset.dayAndTime === activities[j].dataset.dayAndTime) { // if day and time match
                     activities[j].parentElement.classList.add('disabled');
                     activities[j].disabled = true;
                 } 
